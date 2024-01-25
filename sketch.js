@@ -72,7 +72,7 @@ function draw() {
       let mirrorX = bezierPoint(mirror1, mirror2, mirror3, mirror4, t);
       let y = bezierPoint(y1, y2, y3, y4, t);
 
-      let circleSize = map(x1,windowWidth * 3 / 4,windowWidth,3,7);
+      let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,3,7);
 
       if(t < 0.57){
         noStroke();
