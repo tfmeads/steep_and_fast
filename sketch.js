@@ -4,6 +4,7 @@ const NUM_CURVES = 55;
 var steps = 7; 
 const STATIC_STEPS = false; //use static amt of steps for more orderly geometric pattern
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
+const COLOR_FILL = true;
 
 function setup() {
  createCanvas(windowWidth, windowHeight);
@@ -13,6 +14,10 @@ function setup() {
 }
 
 function draw() {
+  if(!COLOR_FILL){
+    background(0);
+  }
+
   //start at 2 because initial curve is kinda lame
   for(let i = 2; i < NUM_CURVES; i++)
   {  
