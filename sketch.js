@@ -63,7 +63,7 @@ function draw() {
 
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
-        var speed = 1000; 
+        var speed = 666; 
         t += (millis() % speed) / (speed * steps );
       } 
 
