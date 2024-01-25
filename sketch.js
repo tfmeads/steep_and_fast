@@ -45,7 +45,7 @@ function draw() {
     bezier(mirror1,y1,mirror2,y2,mirror3,y3,mirror4, y4);
 
     //colors start changing halfway down the screen
-    let yClrMod = map(y1,windowHeight/2,windowHeight,3,333);
+    let yClrMod = -100 + map(y1,windowHeight/2,windowHeight,3,333);
 
     var red = 255;
     var grn = 100 + (yClrMod % 99); 
@@ -74,7 +74,7 @@ function draw() {
 
       let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,3,7);
 
-      if(t < 0.57){
+      if(t < 0.8){
         noStroke();
       }
       else{
