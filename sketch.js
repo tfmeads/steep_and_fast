@@ -2,7 +2,7 @@ var frameSize = 666;
 var marginSize;
 const NUM_CURVES = 55;
 var steps = 7; 
-const STATIC_STEPS = true; //use static amt of steps for more orderly geometric pattern
+const STATIC_STEPS = false; //use static amt of steps for more orderly geometric pattern
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
 const COLOR_FILL = true;
 
