@@ -47,7 +47,7 @@ function draw() {
     //colors start changing halfway down the screen
     let yClrMod = map(y1,windowHeight/2,windowHeight,3,333);
 
-    var red = 255 - random(i/5); //subtract random amt of color for flickering/gradient effect
+    var red = 255;
     var grn = 100 + (yClrMod % 99); 
     var blu = 90 - yClrMod;
     fill(red,grn,blu);
@@ -78,7 +78,7 @@ function draw() {
         noStroke();
       }
       else{
-        stroke(255,150,233);
+        stroke(200,30,255);
       }
 
       circle(x, y, circleSize);
