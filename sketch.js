@@ -61,7 +61,8 @@ function draw() {
 
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
-        t += (millis() % 1000) / (1000 * steps);
+        var speed = 1000; 
+        t += (millis() % speed) / (speed * steps );
       } 
 
 
@@ -71,7 +72,7 @@ function draw() {
 
       let circleSize = map(x1,windowWidth * 3 / 4,windowWidth,3,7);
 
-      if(t < 0.67){
+      if(t < 0.57){
         noStroke();
       }
       else{
