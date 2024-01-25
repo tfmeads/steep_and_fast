@@ -3,10 +3,9 @@ var marginSize;
 const NUM_CURVES = 55;
 var steps = 7; 
 const STEPS_STATIC = false; //use static amt of steps for more orderly geometric pattern
-const STEPS_DYNAMIC_A =  3;
-const STEPS_DYNAMIC_B = 42;
+const LINE_STROKE = false;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
-const COLOR_FILL = true;
+const DEFAULT_SPEED = 2000; 
 
 function setup() {
  createCanvas(windowWidth, windowHeight);
@@ -34,6 +33,9 @@ function draw() {
     y4 = 80 * i;
 
     noFill();
+    if(!LINE_STROKE){
+      noStroke();
+    }
     bezier(x1, y1, x2, y2, x3, y3, x4, y4);
 
     //subtract original x coords from width to mirror, keep y the same
@@ -63,8 +65,7 @@ function draw() {
 
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
-        var speed = 666; 
-        t += (millis() % speed) / (speed * steps );
+        t += (millis() % DEFAULT_SPEED) / (DEFAULT_SPEED * steps );
       } 
 
 
