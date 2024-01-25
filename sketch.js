@@ -83,4 +83,9 @@ function draw() {
       circle(mirrorX,y, circleSize);
   }}
 
+  function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    centerCanvas();
+    background(0);
+  }
 }
