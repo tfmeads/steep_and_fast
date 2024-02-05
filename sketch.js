@@ -1,10 +1,10 @@
 const NUM_CURVES = 55;
-const LINE_STROKE = false;
+const LINE_STROKE = true;
 const STEPS_DYNAMIC = false; //use static amt of steps for more orderly geometric pattern
 const STEPS_DYNAMIC_A =  4;
 const STEPS_DYNAMIC_B = 7;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
-const COLOR_FILL = false;
+const COLOR_FILL = true;
 const DEFAULT_SPEED = 777; 
 
 var steps = 7; 
