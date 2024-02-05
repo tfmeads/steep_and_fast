@@ -1,5 +1,3 @@
-var frameSize = 666;
-var marginSize;
 const NUM_CURVES = 55;
 const LINE_STROKE = false;
 const STEPS_DYNAMIC = false; //use static amt of steps for more orderly geometric pattern
@@ -53,7 +51,7 @@ function draw() {
     bezier(mirror1,y1,mirror2,y2,mirror3,y3,mirror4, y4);
 
     //colors start changing halfway down the screen
-    let yClrMod = -100 + map(y1,windowHeight/2,windowHeight,3,333);
+    let yClrMod = -50 + map(y1,windowHeight/2,windowHeight,3,333);
 
     var red = 255;
     var grn = 100 + (yClrMod % 99); 
