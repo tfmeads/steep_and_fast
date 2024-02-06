@@ -1,12 +1,12 @@
 const NUM_CURVES = 55;
-const LINE_STROKE = true;
-const STEPS_DYNAMIC = false; //use static amt of steps for more orderly geometric pattern
-const STEPS_DYNAMIC_A =  4;
-const STEPS_DYNAMIC_B = 7;
+const LINE_STROKE = false;
+const STEPS_DYNAMIC = true; //use static amt of steps for more orderly geometric pattern
+const STEPS_DYNAMIC_A =  33;
+const STEPS_DYNAMIC_B = 3;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
 const DEFAULT_SPEED = 777; 
 
-var colorFillAlpha = 5;
+var colorFillAlpha = 255;
 var steps = 7; 
 var frameSize = 666;
 var marginSize;
@@ -58,7 +58,7 @@ function draw() {
     var blu = 90 - yClrMod;
     fill(red,grn,blu);
 
-    if(!STEPS_DYNAMIC){
+    if(STEPS_DYNAMIC){
       //make amt of steps increase as y increases
       steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,STEPS_DYNAMIC_B,STEPS_DYNAMIC_A);
     }
