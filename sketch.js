@@ -89,10 +89,10 @@ function draw() {
       circle(x, y, circleSize);
       circle(mirrorX,y, circleSize);
   }}
+}
 
   function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
     centerCanvas();
     background(0);
-  }
 }
