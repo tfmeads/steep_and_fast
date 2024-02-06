@@ -6,8 +6,8 @@ const STEPS_DYNAMIC_B = 3;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
 const DEFAULT_SPEED = 777; 
 
-var colorFillAlpha = 255;
-var steps = 7; 
+var colorFillAlpha = 5;
+var steps = STEPS_DYNAMIC_A; 
 var frameSize = 666;
 var marginSize;
 
