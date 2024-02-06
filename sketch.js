@@ -4,9 +4,9 @@ const STEPS_DYNAMIC = false; //use static amt of steps for more orderly geometri
 const STEPS_DYNAMIC_A =  4;
 const STEPS_DYNAMIC_B = 7;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
-const COLOR_FILL = true;
 const DEFAULT_SPEED = 777; 
 
+var colorFillAlpha = 5;
 var steps = 7; 
 var frameSize = 666;
 var marginSize;
@@ -19,9 +19,9 @@ function setup() {
 }
 
 function draw() {
-  if(!COLOR_FILL){
-    background(0);
-  }
+
+  background(0,colorFillAlpha);
+  
 
   //start at 2 because initial curve is kinda lame
   for(let i = 2; i < NUM_CURVES; i++)
