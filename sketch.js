@@ -1,18 +1,84 @@
 const NUM_CURVES = 55;
 const LINE_STROKE = false;
 const STEPS_DYNAMIC = true; //use static amt of steps for more orderly geometric pattern
-const STEPS_DYNAMIC_A =  33;
-const STEPS_DYNAMIC_B = 3;
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
 const DEFAULT_SPEED = 777; 
+const MIN_SPEED = 55;
 
-var colorFillAlpha = 5;
-var steps = STEPS_DYNAMIC_A; 
+const CC_VELOCITY = 41;
+var velocity = 64;
+const CC_ACCEL = 42;
+var acceleration = 64;
+const CC_FADE = 51;
+var fade = 255;
+const CC_SIZE_A = 43;
+var size_a =  120;
+const CC_SIZE_B = 44;
+var size_b = 7;
+const CC_X1 = 61;
+var X1 = 85;
+const X1_MIN = 7;
+const X1_MAX = 200;
+const CC_X2 = 62;
+var X2 = 10;
+
+var steps = size_a; 
 var frameSize = 666;
 var marginSize;
 
+function onMIDIMessage(data) {
+  msg = new MIDI_Message(data.data);
+
+
+  switch(msg.note){
+    case CC_VELOCITY:
+      velocity = 64 - msg.velocity;
+      console.log("Velocity " + velocity);
+      break;
+    case CC_ACCEL:
+      acceleration = msg.velocity / 20 + .1;
+      console.log("acceleration " + acceleration);
+      break;
+    case CC_FADE:
+      fade = msg.velocity == 127 ? 255 : msg.velocity / 2;
+      console.log("FADE " + msg.velocity);
+      break;
+    case CC_SIZE_A:
+      size_a = msg.velocity;
+      console.log("size_a " + msg.velocity);
+      break;
+    case CC_SIZE_B:
+      size_b = msg.velocity;
+      console.log("size_b " + msg.velocity);
+      break;
+    case CC_X1:
+      X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
+      console.log("x1 " + msg.velocity);
+      break;
+    case CC_X2:
+      X2 = msg.velocity;
+      console.log("x2 " + msg.velocity);
+      break;
+
+
+
+    default:
+      console.log(msg.note + " " + msg.velocity);
+  }
+
+
+
+
+}
+
+
 function setup() {
  createCanvas(windowWidth, windowHeight);
+
+
+ midiInput = new MIDIInput();
+ // Override onMIDIMessage callback with custom function
+ midiInput.onMIDIMessage = onMIDIMessage;
 
  //create margin so image is centered
  marginSize = (windowWidth - frameSize) / 2;
@@ -20,14 +86,13 @@ function setup() {
 
 function draw() {
 
-  background(0,colorFillAlpha);
+  background(0,fade);
   
-
   //start at 2 because initial curve is kinda lame
   for(let i = 2; i < NUM_CURVES; i++)
   {  
-    let x1 = marginSize + 85 * i,
-    x2 = marginSize + 10 * i,
+    let x1 = marginSize + X1 * i,
+    x2 = marginSize + X2 * i,
     x3 = marginSize + 90,
     x4 = marginSize + 15 * i;
 
@@ -55,12 +120,12 @@ function draw() {
 
     var red = 255;
     var grn = 100 + (yClrMod % 99); 
-    var blu = 90 - yClrMod;
+    var blu = 90 - yClrMod % 100;
     fill(red,grn,blu);
 
     if(STEPS_DYNAMIC){
       //make amt of steps increase as y increases
-      steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,STEPS_DYNAMIC_B,STEPS_DYNAMIC_A);
+      steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,size_b,size_a);
     }
 
     for (let a = 0; a <= steps; a++) {
@@ -69,7 +134,9 @@ function draw() {
 
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
-        t += (millis() % DEFAULT_SPEED) / (DEFAULT_SPEED * steps );
+        var speed = (velocity / 64) * DEFAULT_SPEED + MIN_SPEED;
+        speed /= acceleration;
+        t += (millis() % speed) / (speed * steps );
       } 
 
 
@@ -91,8 +158,8 @@ function draw() {
   }}
 }
 
-  function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    centerCanvas();
-    background(0);
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  centerCanvas();
+  background(0);
 }
