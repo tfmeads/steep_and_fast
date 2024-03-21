@@ -21,6 +21,8 @@ const X1_MIN = -30;
 const X1_MAX = 200;
 const CC_X2 = 62;
 var X2 = 10;
+const CC_DIR = 64;
+var FLOW_DIR = 1; //1 = forward
 const CC_CUE = 14;
 const CUE_TIME = 333;
 var CUE_CC = false; //when true, wait until CC value stops changing to change actual value
@@ -122,7 +124,7 @@ function onMIDIMessage(data) {
 
   last_cc[msg.note] = millis();
 
-  if(CUE_CC){
+  if(CUE_CC && msg.note != CC_CUE){
     sleep(CUE_TIME).then(function(){
       if(millis() - last_cc[msg.note] > CUE_TIME){
         handleCC(msg);
@@ -136,9 +138,10 @@ function onMIDIMessage(data) {
 
 function handleCC(msg){
 
+  
   switch(msg.note){
     case CC_VELOCITY:
-      velocity = msg.velocity - 64;
+      velocity = abs(128 - msg.velocity);
       console.log("Velocity " + velocity);
       break;
     case CC_ACCEL:
@@ -165,14 +168,18 @@ function handleCC(msg){
       X2 = msg.velocity;
       console.log("x2 " + msg.velocity);
       break;
-    case CC_CUE:
-      console.log(msg.note + " " + msg.velocity);
-
-      if(msg.velocity > 0){
-        CUE_CC = !CUE_CC;
-        console.log("Cue " + (CUE_CC ? "On" : "Off"));
-      }
-      break;
+      case CC_CUE:
+        if(msg.velocity > 0){
+          CUE_CC = !CUE_CC;
+          console.log("Cue " + (CUE_CC ? "On" : "Off"));
+        }
+        break;
+      case CC_DIR:  
+        if(msg.velocity > 0){
+          FLOW_DIR = -FLOW_DIR;
+          console.log("Flow " + (CC_DIR ? "Forward" : "Reverse"));
+        }
+        break;
 
 
     default:
