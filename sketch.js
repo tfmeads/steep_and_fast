@@ -21,56 +21,14 @@ const X1_MIN = -30;
 const X1_MAX = 200;
 const CC_X2 = 62;
 var X2 = 10;
+const CC_CUE = 14;
+const CUE_TIME = 333;
+var CUE_CC = false; //when true, wait until CC value stops changing to change actual value
+var last_cc = [];
 
 var steps = size_a; 
 var frameSize = 666;
 var marginSize;
-
-function onMIDIMessage(data) {
-  msg = new MIDI_Message(data.data);
-
-
-  switch(msg.note){
-    case CC_VELOCITY:
-      velocity = 64 - msg.velocity;
-      console.log("Velocity " + velocity);
-      break;
-    case CC_ACCEL:
-      acceleration = msg.velocity / 20 + .1;
-      console.log("acceleration " + acceleration);
-      break;
-    case CC_FADE:
-      fade = msg.velocity == 127 ? 255 : msg.velocity / 2;
-      console.log("FADE " + msg.velocity);
-      break;
-    case CC_SIZE_A:
-      size_a = msg.velocity;
-      console.log("size_a " + msg.velocity);
-      break;
-    case CC_SIZE_B:
-      size_b = msg.velocity;
-      console.log("size_b " + msg.velocity);
-      break;
-    case CC_X1:
-      X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
-      console.log("x1 " + msg.velocity);
-      break;
-    case CC_X2:
-      X2 = msg.velocity;
-      console.log("x2 " + msg.velocity);
-      break;
-
-
-
-    default:
-      console.log(msg.note + " " + msg.velocity);
-  }
-
-
-
-
-}
-
 
 function setup() {
  createCanvas(windowWidth, windowHeight);
@@ -158,8 +116,82 @@ function draw() {
   }}
 }
 
+
+function onMIDIMessage(data) {
+  msg = new MIDI_Message(data.data);
+
+  last_cc[msg.note] = millis();
+
+  if(CUE_CC){
+    sleep(CUE_TIME).then(function(){
+      if(millis() - last_cc[msg.note] > CUE_TIME){
+        handleCC(msg);
+      }
+    })
+  }
+  else{
+    handleCC(msg);
+  }
+}
+
+function handleCC(msg){
+
+  switch(msg.note){
+    case CC_VELOCITY:
+      velocity = msg.velocity - 64;
+      console.log("Velocity " + velocity);
+      break;
+    case CC_ACCEL:
+      acceleration = msg.velocity / 20 + .1;
+      console.log("acceleration " + acceleration);
+      break;
+    case CC_FADE:
+      fade = msg.velocity == 127 ? 255 : msg.velocity / 2;
+      console.log("FADE " + msg.velocity);
+      break;
+    case CC_SIZE_A:
+      size_a = msg.velocity;
+      console.log("size_a " + msg.velocity);
+      break;
+    case CC_SIZE_B:
+      size_b = msg.velocity;
+      console.log("size_b " + msg.velocity);
+      break;
+    case CC_X1:
+      X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
+      console.log("x1 " + msg.velocity);
+      break;
+    case CC_X2:
+      X2 = msg.velocity;
+      console.log("x2 " + msg.velocity);
+      break;
+    case CC_CUE:
+      console.log(msg.note + " " + msg.velocity);
+
+      if(msg.velocity > 0){
+        CUE_CC = !CUE_CC;
+        console.log("Cue " + (CUE_CC ? "On" : "Off"));
+      }
+      break;
+
+
+    default:
+      console.log(msg.note + " " + msg.velocity);
+  }
+}
+
+// a custom 'sleep' or wait' function, that returns a Promise that resolves only after a timeout
+function sleep(millisecondsDuration)
+{
+  return new Promise((resolve) => {
+    setTimeout(resolve, millisecondsDuration);
+  })
+}
+
+
+
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  centerCanvas();
+  center();
   background(0);
 }
