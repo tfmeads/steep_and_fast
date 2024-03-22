@@ -31,6 +31,7 @@ var last_cc = [];
 var steps = size_a; 
 var frameSize = 666;
 var marginSize;
+var SKIP_CUE_CCS = [CC_CUE,CC_DIR]; //holds CCs we don't want to be affected by Cueing
 
 function setup() {
  createCanvas(windowWidth, windowHeight);
@@ -95,7 +96,7 @@ function draw() {
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
         var speed = (velocity / 64) * DEFAULT_SPEED + MIN_SPEED;
-        speed /= acceleration;
+        speed /= acceleration * FLOW_DIR;
         t += (millis() % speed) / (speed * steps );
       } 
 
@@ -124,7 +125,7 @@ function onMIDIMessage(data) {
 
   last_cc[msg.note] = millis();
 
-  if(CUE_CC && msg.note != CC_CUE){
+  if(CUE_CC && !SKIP_CUE_CCS.includes(msg.note)){
     sleep(CUE_TIME).then(function(){
       if(millis() - last_cc[msg.note] > CUE_TIME){
         handleCC(msg);
