@@ -189,7 +189,7 @@ function handleCC(msg){
       console.log("blu " + bluMod);
       break;
     case CC_GRN:
-      grnMod = map(msg.velocity,0,127,-99,300);
+      grnMod = map(msg.velocity,0,127,-50,300);
       console.log("grn " + grnMod);
       break;
     case CC_X2:
@@ -205,7 +205,7 @@ function handleCC(msg){
     case CC_DIR:  
       if(msg.velocity > 0){
         FLOW_DIR = -FLOW_DIR;
-        console.log("Flow " + (CC_DIR ? "Forward" : "Reverse"));
+        console.log("Flow " + (FLOW_DIR > 0 ? "Forward" : "Reverse"));
       }
       break;
 
