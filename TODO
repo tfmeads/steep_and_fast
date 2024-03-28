@@ -1,8 +1,18 @@
--Presets
+Presets
+- Button for saving current CC values into timestamped file in /presets folder
+- Handle PCs for recalling presets
+- Remove values from saved preset to only change certain things- for example remove everything except color to only change pallette
 
--Spectrum analyzer
-
--draw background every other frame for low values of fade
+- Draw background every other frame for low values of fade
 
 Automation Effects
 - Pulse (set min and max of any CC value, when active will lerp back and forth)
+- Sync to spectrum analyzer or value of speed fader
+
+Spectrum analyzer
+- Bubbles move in time to music
+- Music volume affects speed of bubbles
+- Trigger presets/automations on certain beats/subdivisions
+
+Control Console
+- Some sort of UI that will run on different display that will show more useful information / extra buttons
