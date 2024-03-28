@@ -1,15 +1,13 @@
-const NUM_CURVES = 55;
 const LINE_STROKE = false;
-const STEPS_DYNAMIC = true; //use static amt of steps for more orderly geometric pattern
 const DYNAMIC_IMAGE = true; //set false to see default location of each bezier point
 const DEFAULT_SPEED = 777; 
 const MIN_SPEED = 55;
 
 
 const CC_ACCEL = 41;
-var acceleration = .1;
+var acceleration = 2;
 const CC_RADIUS = 42;
-var radius = 1;
+var radius = .3;
 const RADIUS_MIN = .1;
 const RADIUS_MAX = 3;
 const CC_FADE = 51;
@@ -91,10 +89,9 @@ function draw() {
     var blu = 90 - yClrMod % 100;
     fill(red,grn,blu);
 
-    if(STEPS_DYNAMIC){
-      //make amt of steps increase as y increases
-      steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,size_b,size_a);
-    }
+    //make amt of steps increase as y increases
+    steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,size_b,size_a);
+
 
     for (let a = 0; a <= steps; a++) {
       //t represents how far along we are on the curve represented by 0.0 - 1.0
@@ -158,7 +155,7 @@ function handleCC(msg){
       break;
     case CC_FADE:
       fade = msg.velocity == 127 ? 255 : msg.velocity / 2;
-      console.log("FADE " + msg.velocity);
+      console.log("FADE " + fade);
       break;
     case CC_SIZE_A:
       size_a = msg.velocity;
@@ -174,7 +171,7 @@ function handleCC(msg){
       break;
     case CC_X1:
       X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
-      console.log("x1 " + msg.velocity);
+      console.log("x1 " + X1);
       break;
     case CC_X2:
       X2 = msg.velocity;

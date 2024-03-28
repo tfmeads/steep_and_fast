@@ -4,6 +4,7 @@
 
 -Color pallettes 
 
--Size of bubbles MIDI
-
 -draw background every other frame for low values of fade
+
+Automation Effects
+- Pulse (set min and max of any CC value, when active will lerp back and forth)
