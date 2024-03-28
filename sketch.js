@@ -32,7 +32,7 @@ const X1_MIN = -30;
 const X1_MAX = 200;
 const CC_X2 = 62;
 var X2 = 10;
-const CC_DIR = 64;
+const CC_DIR = 24;
 var FLOW_DIR = 1; //1 = forward
 const CC_CUE = 14;
 const CUE_TIME = 333;
@@ -196,18 +196,18 @@ function handleCC(msg){
       X2 = msg.velocity;
       console.log("x2 " + msg.velocity);
       break;
-      case CC_CUE:
-        if(msg.velocity > 0){
-          CUE_CC = !CUE_CC;
-          console.log("Cue " + (CUE_CC ? "On" : "Off"));
-        }
-        break;
-      case CC_DIR:  
-        if(msg.velocity > 0){
-          FLOW_DIR = -FLOW_DIR;
-          console.log("Flow " + (CC_DIR ? "Forward" : "Reverse"));
-        }
-        break;
+    case CC_CUE:
+      if(msg.velocity > 0){
+        CUE_CC = !CUE_CC;
+        console.log("Cue " + (CUE_CC ? "On" : "Off"));
+      }
+      break;
+    case CC_DIR:  
+      if(msg.velocity > 0){
+        FLOW_DIR = -FLOW_DIR;
+        console.log("Flow " + (CC_DIR ? "Forward" : "Reverse"));
+      }
+      break;
 
 
     default:
