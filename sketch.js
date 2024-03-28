@@ -14,6 +14,10 @@ const RADIUS_MIN = .1;
 const RADIUS_MAX = 3;
 const CC_FADE = 51;
 var fade = 255;
+const CC_CURVES = 52;
+const NUM_CURVES_MIN = 14;
+const NUM_CURVES_MAX = 127;
+var curves = 55;
 const CC_SIZE_A = 43;
 var size_a =  150;
 const CC_SIZE_B = 44;
@@ -53,7 +57,7 @@ function draw() {
   background(0,fade);
   
   //start at 2 because initial curve is kinda lame
-  for(let i = 2; i < NUM_CURVES; i++)
+  for(let i = 2; i < curves; i++)
   {  
     let x1 = marginSize + X1 * i,
     x2 = marginSize + X2 * i,
@@ -163,6 +167,10 @@ function handleCC(msg){
     case CC_SIZE_B:
       size_b = msg.velocity;
       console.log("size_b " + msg.velocity);
+      break;
+    case CC_CURVES:
+      curves = int(map(msg.velocity,0,127,NUM_CURVES_MIN,NUM_CURVES_MAX));
+      console.log("curves " + radius);
       break;
     case CC_X1:
       X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
