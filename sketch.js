@@ -16,6 +16,10 @@ const CC_CURVES = 52;
 const NUM_CURVES_MIN = 14;
 const NUM_CURVES_MAX = 127;
 var curves = 55;
+const CC_RANGE = 53;
+const RANGE_MIN = .3;
+const RANGE_MAX = 3;
+var range = 1;
 const CC_SIZE_A = 43;
 var size_a =  150;
 const CC_RED = 63;
@@ -92,8 +96,8 @@ function draw() {
     //colors start changing halfway down the screen
     let yClrMod = -50 + map(y1,windowHeight/2,windowHeight,3,333);
 
-    var grn = grnMod + (yClrMod % 99); 
-    var blu = bluMod - yClrMod % 100;
+    var grn = grnMod + (yClrMod % (range * 99)); 
+    var blu = bluMod - (yClrMod % (range * 100));
     fill(red,grn,blu);
 
     //make amt of steps increase as y increases
@@ -179,6 +183,10 @@ function handleCC(msg){
     case CC_X1:
       X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
       console.log("x1 " + X1);
+      break;
+    case CC_RANGE:
+      range = map(msg.velocity,0,127,RANGE_MIN,RANGE_MAX);
+      console.log("range " + range);
       break;
     case CC_RED:
       red = (msg.velocity * 2) + 1;
