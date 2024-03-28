@@ -5,10 +5,13 @@ const DYNAMIC_IMAGE = true; //set false to see default location of each bezier p
 const DEFAULT_SPEED = 777; 
 const MIN_SPEED = 55;
 
-const CC_VELOCITY = 41;
-var velocity = 0;
-const CC_ACCEL = 42;
+
+const CC_ACCEL = 41;
 var acceleration = .1;
+const CC_RADIUS = 42;
+var radius = 1;
+const RADIUS_MIN = .1;
+const RADIUS_MAX = 3;
 const CC_FADE = 51;
 var fade = 255;
 const CC_SIZE_A = 43;
@@ -95,7 +98,7 @@ function draw() {
 
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
-        var speed = (velocity / 64) * DEFAULT_SPEED + MIN_SPEED;
+        var speed = DEFAULT_SPEED + MIN_SPEED;
         speed /= acceleration * FLOW_DIR;
         t += (millis() % speed) / (speed * steps );
       } 
@@ -105,7 +108,7 @@ function draw() {
       let mirrorX = bezierPoint(mirror1, mirror2, mirror3, mirror4, t);
       let y = bezierPoint(y1, y2, y3, y4, t);
 
-      let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,3,7);
+      let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,radius * 3,radius * 7);
 
       if(t < 0.8){
         noStroke();
@@ -141,9 +144,9 @@ function handleCC(msg){
 
   
   switch(msg.note){
-    case CC_VELOCITY:
-      velocity = abs(128 - msg.velocity);
-      console.log("Velocity " + velocity);
+    case CC_RADIUS:
+      radius = map(msg.velocity,0,127,RADIUS_MIN,RADIUS_MAX);
+      console.log("RADIUS " + radius);
       break;
     case CC_ACCEL:
       acceleration = msg.velocity / 20 + .1;
