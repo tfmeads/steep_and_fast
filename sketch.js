@@ -18,6 +18,12 @@ const NUM_CURVES_MAX = 127;
 var curves = 55;
 const CC_SIZE_A = 43;
 var size_a =  150;
+const CC_RED = 63;
+var red =  255;
+const CC_GRN = 54;
+var grnMod =  100;
+const CC_BLU = 64;
+var bluMod =  90;
 const CC_SIZE_B = 44;
 var size_b = 3;
 const CC_X1 = 61;
@@ -41,6 +47,8 @@ var SKIP_CUE_CCS = [CC_CUE,CC_DIR]; //holds CCs we don't want to be affected by 
 function setup() {
  createCanvas(windowWidth, windowHeight);
 
+ //doesn't work if you set it above for some reason
+ red = 255;
 
  midiInput = new MIDIInput();
  // Override onMIDIMessage callback with custom function
@@ -84,9 +92,8 @@ function draw() {
     //colors start changing halfway down the screen
     let yClrMod = -50 + map(y1,windowHeight/2,windowHeight,3,333);
 
-    var red = 255;
-    var grn = 100 + (yClrMod % 99); 
-    var blu = 90 - yClrMod % 100;
+    var grn = grnMod + (yClrMod % 99); 
+    var blu = bluMod - yClrMod % 100;
     fill(red,grn,blu);
 
     //make amt of steps increase as y increases
@@ -172,6 +179,18 @@ function handleCC(msg){
     case CC_X1:
       X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
       console.log("x1 " + X1);
+      break;
+    case CC_RED:
+      red = (msg.velocity * 2) + 1;
+      console.log("red " + red);
+      break;
+    case CC_BLU:
+      bluMod = map(msg.velocity,0,127,100,200);
+      console.log("blu " + bluMod);
+      break;
+    case CC_GRN:
+      grnMod = map(msg.velocity,0,127,-99,300);
+      console.log("grn " + grnMod);
       break;
     case CC_X2:
       X2 = msg.velocity;
