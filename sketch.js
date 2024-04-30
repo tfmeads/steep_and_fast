@@ -18,7 +18,7 @@ const NUM_CURVES_MAX = 127;
 var curves = 55;
 const CC_RANGE = 53;
 const RANGE_MIN = .3;
-const RANGE_MAX = 7;
+const RANGE_MAX = 3;
 var range = 1;
 const CC_SIZE_A = 43;
 var size_a =  150;
@@ -56,6 +56,8 @@ function setup() {
 
  //create margin so image is centered
  marginSize = (windowWidth - frameSize) / 2;
+
+ //colorMode(HSB);
 
  var cue = new MidiCtrl(CC_CUE,'CUE','',0);
   cue.isBoolean = true;
@@ -110,10 +112,10 @@ function setup() {
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_BLU,'BLU','',blu);
  ctrl.min = 100;
- ctrl.max = 200;
+ ctrl.max = 255;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_GRN,'GRN','',grn);
- ctrl.min = -50;
+ ctrl.min = -100;
  ctrl.max = 300;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_DIR,'DIR','',0);
@@ -193,7 +195,7 @@ function draw() {
     fill(red,_grn,_blu);
 
     //make amt of steps increase as y increases
-    steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,size_b,size_a);
+    steps = map(y1,windowHeight / 10,windowHeight * 10 / 3,size_b,size_a);
 
 
     for (let a = 0; a <= steps; a++) {
