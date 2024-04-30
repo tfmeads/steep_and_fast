@@ -25,9 +25,9 @@ var size_a =  150;
 const CC_RED = 63;
 var red =  255;
 const CC_GRN = 54;
-var grnMod =  100;
+var grn =  100;
 const CC_BLU = 64;
-var bluMod =  90;
+var blu =  90;
 const CC_SIZE_B = 44;
 var size_b = 3;
 const CC_X1 = 61;
@@ -38,8 +38,6 @@ const CC_X2 = 62;
 var X2 = 10;
 const CC_DIR = 24;
 var FLOW_DIR = 1; //1 = forward
-const CC_CUE = 14;
-const CUE_TIME = 333;
 var CUE_CC = false; //when true, wait until CC value stops changing to change actual value
 var last_cc = [];
 
@@ -48,21 +46,109 @@ var frameSize = 666;
 var marginSize;
 var SKIP_CUE_CCS = [CC_CUE,CC_DIR]; //holds CCs we don't want to be affected by Cueing
 
+var ctrls = [];
+
 function setup() {
  createCanvas(windowWidth, windowHeight);
 
  //doesn't work if you set it above for some reason
  red = 255;
 
- midiInput = new MIDIInput();
- // Override onMIDIMessage callback with custom function
- midiInput.onMIDIMessage = onMIDIMessage;
-
  //create margin so image is centered
  marginSize = (windowWidth - frameSize) / 2;
+
+ var cue = new MidiCtrl(CC_CUE,'CUE','',0);
+  cue.isBoolean = true;
+ addCtrl(cue);
+
+ var ctrl = new MidiCtrl(CC_RADIUS,'Radius','',radius);
+ ctrl.min = RADIUS_MIN;
+ ctrl.max = RADIUS_MAX;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_ACCEL,'Acceleration','',acceleration);
+ ctrl.min = .1;
+ ctrl.max = 7;
+ ctrl.lerpAmt = .8;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_FADE,'Fade','',fade);
+ ctrl.min = 0;
+ ctrl.max = 255;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_SIZE_A,'SIZE_A','',size_a);
+ ctrl.min = 0;
+ ctrl.max = 127;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_SIZE_B,'SIZE_B','',size_b);
+ ctrl.min = 0;
+ ctrl.max = 127;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_CURVES,'CURVES','',curves);
+ ctrl.min = NUM_CURVES_MIN;
+ ctrl.max = NUM_CURVES_MAX;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_X1,'X1','',X1);
+ ctrl.min = X1_MIN;
+ ctrl.max = X1_MAX;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_X2,'X2','',X2);
+ ctrl.min = 0;
+ ctrl.max = 127;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_RANGE,'RANGE','',range);
+ ctrl.min = RANGE_MIN;
+ ctrl.max = RANGE_MAX;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_RED,'RED','',red);
+ ctrl.min = 0;
+ ctrl.max = 255;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_BLU,'BLU','',blu);
+ ctrl.min = 100;
+ ctrl.max = 200;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_GRN,'GRN','',grn);
+ ctrl.min = -50;
+ ctrl.max = 300;
+ addCtrl(ctrl);
+ var ctrl = new MidiCtrl(CC_DIR,'DIR','',0);
+ctrl.isBoolean = true;
+ addCtrl(ctrl);
+
 }
 
+
 function draw() {
+
+  var ctrl = getCtrl(CC_RADIUS);
+  radius = ctrl.val;
+  var ctrl = getCtrl(CC_ACCEL);
+  acceleration = ctrl.val;
+  var ctrl = getCtrl(CC_FADE);
+  fade = ctrl.val;
+  var ctrl = getCtrl(CC_SIZE_A);
+  size_a = ctrl.val;
+  var ctrl = getCtrl(CC_SIZE_B);
+  size_b = ctrl.val;
+  var ctrl = getCtrl(CC_CURVES);
+  curves = ctrl.val;
+  var ctrl = getCtrl(CC_X1);
+  X1 = ctrl.val;
+  var ctrl = getCtrl(CC_X2);
+  X2 = ctrl.val;
+  var ctrl = getCtrl(CC_RANGE);
+  range = ctrl.val;
+  var ctrl = getCtrl(CC_RED);
+  red = ctrl.val;
+  var ctrl = getCtrl(CC_BLU);
+  blu = ctrl.val;
+  var ctrl = getCtrl(CC_GRN);
+  grn = ctrl.val;
+
+  var ctrl = getCtrl(CC_DIR);
+  dir = ctrl.active ? 1 : 0;
+  
+  
+  ctrls.forEach((element) => element.update());
 
   background(0,fade);
   
@@ -96,9 +182,9 @@ function draw() {
     //colors start changing halfway down the screen
     let yClrMod = -50 + map(y1,windowHeight/2,windowHeight,3,333);
 
-    var grn = grnMod + (yClrMod % (range * 99)); 
-    var blu = bluMod - (yClrMod % (range * 100));
-    fill(red,grn,blu);
+    var _grn = grn + (yClrMod % (range * 99)); 
+    var _blu = blu - (yClrMod % (range * 100));
+    fill(red,_grn,_blu);
 
     //make amt of steps increase as y increases
     steps = map(y1,windowHeight / 10,windowHeight * 10 / 7,size_b,size_a);
@@ -132,96 +218,11 @@ function draw() {
       circle(x, y, circleSize);
       circle(mirrorX,y, circleSize);
   }}
+
+
 }
 
 
-function onMIDIMessage(data) {
-  msg = new MIDI_Message(data.data);
-
-  last_cc[msg.note] = millis();
-
-  if(CUE_CC && !SKIP_CUE_CCS.includes(msg.note)){
-    sleep(CUE_TIME).then(function(){
-      if(millis() - last_cc[msg.note] > CUE_TIME){
-        handleCC(msg);
-      }
-    })
-  }
-  else{
-    handleCC(msg);
-  }
-}
-
-function handleCC(msg){
-
-  
-  switch(msg.note){
-    case CC_RADIUS:
-      radius = map(msg.velocity,0,127,RADIUS_MIN,RADIUS_MAX);
-      console.log("RADIUS " + radius);
-      break;
-    case CC_ACCEL:
-      acceleration = msg.velocity / 20 + .1;
-      console.log("acceleration " + acceleration);
-      break;
-    case CC_FADE:
-      fade = msg.velocity == 127 ? 255 : msg.velocity / 2;
-      console.log("FADE " + fade);
-      break;
-    case CC_SIZE_A:
-      size_a = msg.velocity;
-      console.log("size_a " + msg.velocity);
-      break;
-    case CC_SIZE_B:
-      size_b = msg.velocity;
-      console.log("size_b " + msg.velocity);
-      break;
-    case CC_CURVES:
-      curves = int(map(msg.velocity,0,127,NUM_CURVES_MIN,NUM_CURVES_MAX));
-      console.log("curves " + radius);
-      break;
-    case CC_X1:
-      X1 = map(msg.velocity,0,127,X1_MIN,X1_MAX);
-      console.log("x1 " + X1);
-      break;
-    case CC_RANGE:
-      range = map(msg.velocity,0,127,RANGE_MIN,RANGE_MAX);
-      console.log("range " + range);
-      break;
-    case CC_RED:
-      red = (msg.velocity * 2) + 1;
-      console.log("red " + red);
-      break;
-    case CC_BLU:
-      bluMod = map(msg.velocity,0,127,100,200);
-      console.log("blu " + bluMod);
-      break;
-    case CC_GRN:
-      grnMod = map(msg.velocity,0,127,-50,300);
-      console.log("grn " + grnMod);
-      break;
-    case CC_X2:
-      X2 = msg.velocity;
-      console.log("x2 " + msg.velocity);
-      break;
-    case CC_CUE:
-      if(msg.velocity > 0){
-        CUE_CC = !CUE_CC;
-        console.log("Cue " + (CUE_CC ? "On" : "Off"));
-      }
-      break;
-    case CC_DIR:  
-      if(msg.velocity > 0){
-        FLOW_DIR = -FLOW_DIR;
-        console.log("Flow " + (FLOW_DIR > 0 ? "Forward" : "Reverse"));
-      }
-      break;
-
-
-    default:
-      console.log(msg.note + " " + msg.velocity);
-  }
-}
 
 // a custom 'sleep' or wait' function, that returns a Promise that resolves only after a timeout
 function sleep(millisecondsDuration)
