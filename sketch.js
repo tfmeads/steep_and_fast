@@ -77,22 +77,28 @@ function setup() {
  var ctrl = new MidiCtrl(CC_SIZE_A,'SIZE_A','',size_a);
  ctrl.min = 0;
  ctrl.max = 127;
+ ctrl.lerpAmt = 0.3;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_SIZE_B,'SIZE_B','',size_b);
  ctrl.min = 0;
  ctrl.max = 127;
+ ctrl.lerpAmt = 0.3;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_CURVES,'CURVES','',curves);
  ctrl.min = NUM_CURVES_MIN;
  ctrl.max = NUM_CURVES_MAX;
+ ctrl.lerpAmt = 0.5;
+
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_X1,'X1','',X1);
  ctrl.min = X1_MIN;
  ctrl.max = X1_MAX;
+ ctrl.lerpAmt = 0.3;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_X2,'X2','',X2);
  ctrl.min = 0;
  ctrl.max = 127;
+ ctrl.lerpAmt = 0.3;
  addCtrl(ctrl);
  var ctrl = new MidiCtrl(CC_RANGE,'RANGE','',range);
  ctrl.min = RANGE_MIN;
