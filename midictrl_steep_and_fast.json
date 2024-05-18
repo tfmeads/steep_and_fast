@@ -28,14 +28,14 @@
         {
             "name" : "Fade",
             "CC" : 51,
-            "defaultVal" : 255,
+            "defaultVal" : 20,
             "min" : 0,
             "max" : 255
         },
         {
             "name" : "SIZE_A",
             "CC" : 43,
-            "defaultVal" : 150,
+            "defaultVal" : 42,
             "min" : 0,
             "max" : 127,
             "lerpAmt" : 0.3
@@ -43,7 +43,7 @@
         {
             "name" : "SIZE_B",
             "CC" : 44,
-            "defaultVal" : 3,
+            "defaultVal" : 30,
             "min" : 0,
             "max" : 127,
             "lerpAmt" : 0.3
@@ -51,7 +51,7 @@
         {
             "name" : "Curves",
             "CC" : 52,
-            "defaultVal" : 55,
+            "defaultVal" : 127,
             "min" : 14,
             "max" : 127,
             "lerpAmt" : 0.5
@@ -60,7 +60,7 @@
         {
             "name" : "X1",
             "CC" : 61,
-            "defaultVal" : 42,
+            "defaultVal" : 50,
             "min" : -30,
             "max" : 200,
             "lerpAmt" : 0.3
@@ -68,7 +68,7 @@
         {
             "name" : "X2",
             "CC" : 62,
-            "defaultVal" : 10,
+            "defaultVal" : -50,
             "min" : -127,
             "max" : 127,
             "lerpAmt" : 0.3
@@ -76,7 +76,7 @@
         {
             "name" : "Range",
             "CC" : 53,
-            "defaultVal" : 1,
+            "defaultVal" : 2,
             "min" : 0.3,
             "max" : 3
         },
@@ -90,14 +90,14 @@
         {
             "name" : "BLU",
             "CC" : 64,
-            "defaultVal" : 90,
+            "defaultVal" : 120,
             "min" : -50,
             "max" : 305
         },
         {
             "name" : "GRN",
             "CC" : 54,
-            "defaultVal" : 100,
+            "defaultVal" : 80,
             "min" : -100,
             "max" : 255
         }
