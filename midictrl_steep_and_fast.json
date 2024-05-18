@@ -91,15 +91,15 @@
             "name" : "BLU",
             "CC" : 64,
             "defaultVal" : 90,
-            "min" : 90,
-            "max" : 255
+            "min" : -50,
+            "max" : 305
         },
         {
             "name" : "GRN",
             "CC" : 54,
             "defaultVal" : 100,
             "min" : -100,
-            "max" : 300
+            "max" : 255
         }
     ]
 
