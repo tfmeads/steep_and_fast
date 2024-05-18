@@ -1,0 +1,106 @@
+{
+    "ctrls" : [
+        {
+            "name" : "Cue",
+            "CC" : 14,
+            "isBoolean" : true
+        },
+        {
+            "name" : "Dir",
+            "CC" : 24,
+            "isBoolean" : true
+        },
+        {
+            "name" : "Radius",
+            "CC" : 42,
+            "defaultVal" : 0.3,
+            "min" : 0.1,
+            "max" : 3
+        },
+        {
+            "name" : "Acceleration",
+            "CC" : 41,
+            "defaultVal" : 2,
+            "min" : 0.1,
+            "max" : 7,
+            "lerpAmt" : 0.8
+        },
+        {
+            "name" : "Fade",
+            "CC" : 51,
+            "defaultVal" : 255,
+            "min" : 0,
+            "max" : 255
+        },
+        {
+            "name" : "SIZE_A",
+            "CC" : 43,
+            "defaultVal" : 150,
+            "min" : 0,
+            "max" : 127,
+            "lerpAmt" : 0.3
+        },
+        {
+            "name" : "SIZE_B",
+            "CC" : 44,
+            "defaultVal" : 3,
+            "min" : 0,
+            "max" : 127,
+            "lerpAmt" : 0.3
+        },
+        {
+            "name" : "Curves",
+            "CC" : 52,
+            "defaultVal" : 55,
+            "min" : 14,
+            "max" : 127,
+            "lerpAmt" : 0.5
+
+        },
+        {
+            "name" : "X1",
+            "CC" : 61,
+            "defaultVal" : 42,
+            "min" : -30,
+            "max" : 200,
+            "lerpAmt" : 0.3
+        },
+        {
+            "name" : "X2",
+            "CC" : 62,
+            "defaultVal" : 10,
+            "min" : -127,
+            "max" : 127,
+            "lerpAmt" : 0.3
+        },
+        {
+            "name" : "Range",
+            "CC" : 53,
+            "defaultVal" : 1,
+            "min" : 0.3,
+            "max" : 3
+        },
+        {
+            "name" : "RED",
+            "CC" : 63,
+            "defaultVal" : 255,
+            "min" : 0,
+            "max" : 255
+        },
+        {
+            "name" : "BLU",
+            "CC" : 64,
+            "defaultVal" : 90,
+            "min" : 90,
+            "max" : 255
+        },
+        {
+            "name" : "GRN",
+            "CC" : 54,
+            "defaultVal" : 100,
+            "min" : -100,
+            "max" : 300
+        }
+    ]
+
+}

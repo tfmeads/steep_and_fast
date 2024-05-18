@@ -3,168 +3,73 @@ const DYNAMIC_IMAGE = true; //set false to see default location of each bezier p
 const DEFAULT_SPEED = 777; 
 const MIN_SPEED = 55;
 
-
-const CC_ACCEL = 41;
-var acceleration = 2;
-const CC_RADIUS = 42;
-var radius = .3;
-const RADIUS_MIN = .1;
-const RADIUS_MAX = 3;
-const CC_FADE = 51;
-var fade = 255;
-const CC_CURVES = 52;
-const NUM_CURVES_MIN = 14;
-const NUM_CURVES_MAX = 127;
-var curves = 55;
-const CC_RANGE = 53;
-const RANGE_MIN = .3;
-const RANGE_MAX = 3;
-var range = 1;
-const CC_SIZE_A = 43;
-var size_a =  150;
-const CC_RED = 63;
-var red =  255;
-const CC_GRN = 54;
-var grn =  100;
-const CC_BLU = 64;
-var blu =  90;
-const CC_SIZE_B = 44;
-var size_b = 3;
-const CC_X1 = 61;
-var X1 = 42;
-const X1_MIN = -30;
-const X1_MAX = 200;
-const CC_X2 = 62;
-var X2 = 10;
-const CC_DIR = 24;
 var FLOW_DIR = 1; //1 = forward
-var CUE_CC = false; //when true, wait until CC value stops changing to change actual value
-var last_cc = [];
 
-var steps = size_a; 
+var steps = 150; 
 var frameSize = 666;
 var marginSize;
-var SKIP_CUE_CCS = [CC_CUE,CC_DIR]; //holds CCs we don't want to be affected by Cueing
 
-var ctrls = [];
+//holds CCs we don't want to be affected by Cueing
+var SKIP_CUE_CCS = [
+  CC_CUE,
+];
+
+
+function preload(){
+ //load from json
+ fetch("midictrl_steep_and_fast.json")
+  .then((res) => res.text())
+  .then((text) => {
+    var arr = JSON.parse(text);
+    console.log(arr);
+
+    arr.ctrls.forEach(async (ctrl) => {
+      var proto = new MidiCtrl();
+      var res = Object.assign(proto,ctrl);
+      console.log(res);
+      addCtrl(res);
+    });
+
+   })
+  .catch((e) => console.error(e));
+}
 
 function setup() {
  createCanvas(windowWidth, windowHeight);
 
- //doesn't work if you set it above for some reason
- red = 255;
+ noCursor();
 
  //create margin so image is centered
  marginSize = (windowWidth - frameSize) / 2;
 
- //colorMode(HSB);
-
- var cue = new MidiCtrl(CC_CUE,'CUE','',0);
-  cue.isBoolean = true;
- addCtrl(cue);
-
- var ctrl = new MidiCtrl(CC_RADIUS,'Radius','',radius);
- ctrl.min = RADIUS_MIN;
- ctrl.max = RADIUS_MAX;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_ACCEL,'Acceleration','',acceleration);
- ctrl.min = .1;
- ctrl.max = 7;
- ctrl.lerpAmt = .8;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_FADE,'Fade','',fade);
- ctrl.min = 0;
- ctrl.max = 255;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_SIZE_A,'SIZE_A','',size_a);
- ctrl.min = 0;
- ctrl.max = 127;
- ctrl.lerpAmt = 0.3;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_SIZE_B,'SIZE_B','',size_b);
- ctrl.min = 0;
- ctrl.max = 127;
- ctrl.lerpAmt = 0.3;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_CURVES,'CURVES','',curves);
- ctrl.min = NUM_CURVES_MIN;
- ctrl.max = NUM_CURVES_MAX;
- ctrl.lerpAmt = 0.5;
-
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_X1,'X1','',X1);
- ctrl.min = X1_MIN;
- ctrl.max = X1_MAX;
- ctrl.lerpAmt = 0.3;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_X2,'X2','',X2);
- ctrl.min = 0;
- ctrl.max = 127;
- ctrl.lerpAmt = 0.3;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_RANGE,'RANGE','',range);
- ctrl.min = RANGE_MIN;
- ctrl.max = RANGE_MAX;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_RED,'RED','',red);
- ctrl.min = 0;
- ctrl.max = 255;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_BLU,'BLU','',blu);
- ctrl.min = 100;
- ctrl.max = 255;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_GRN,'GRN','',grn);
- ctrl.min = -100;
- ctrl.max = 300;
- addCtrl(ctrl);
- var ctrl = new MidiCtrl(CC_DIR,'DIR','',0);
-ctrl.isBoolean = true;
- addCtrl(ctrl);
-
+ console.log(ctrls);
 }
 
 
 function draw() {
 
-  var ctrl = getCtrl(CC_RADIUS);
-  radius = ctrl.val;
-  var ctrl = getCtrl(CC_ACCEL);
-  acceleration = ctrl.val;
-  var ctrl = getCtrl(CC_FADE);
-  fade = ctrl.val;
-  var ctrl = getCtrl(CC_SIZE_A);
-  size_a = ctrl.val;
-  var ctrl = getCtrl(CC_SIZE_B);
-  size_b = ctrl.val;
-  var ctrl = getCtrl(CC_CURVES);
-  curves = ctrl.val;
-  var ctrl = getCtrl(CC_X1);
-  X1 = ctrl.val;
-  var ctrl = getCtrl(CC_X2);
-  X2 = ctrl.val;
-  var ctrl = getCtrl(CC_RANGE);
-  range = ctrl.val;
-  var ctrl = getCtrl(CC_RED);
-  red = ctrl.val;
-  var ctrl = getCtrl(CC_BLU);
-  blu = ctrl.val;
-  var ctrl = getCtrl(CC_GRN);
-  grn = ctrl.val;
-
-  var ctrl = getCtrl(CC_DIR);
-  dir = ctrl.active ? 1 : 0;
   
+  for (let [key, value] of Object.entries(ctrls)) {
+    getCtrl(key).update();
+}
   
-  ctrls.forEach((element) => element.update());
+  steep_and_fast();
 
-  background(0,fade);
+
+}
+
+
+function steep_and_fast(){
+
+  FLOW_DIR = getCtrl("Dir").active ? 1 : -1;
+  
+  background(0,getCtrl("Fade").val);
   
   //start at 2 because initial curve is kinda lame
-  for(let i = 2; i < curves; i++)
+  for(let i = 2; i < getCtrl("Curves").val; i++)
   {  
-    let x1 = marginSize + X1 * i,
-    x2 = marginSize + X2 * i,
+    let x1 = marginSize + getCtrl("X1").val * i,
+    x2 = marginSize + getCtrl("X2").val * i,
     x3 = marginSize + 90,
     x4 = marginSize + 15 * i;
 
@@ -190,12 +95,12 @@ function draw() {
     //colors start changing halfway down the screen
     let yClrMod = -50 + map(y1,windowHeight/2,windowHeight,3,333);
 
-    var _grn = grn + (yClrMod % (range * 99)); 
-    var _blu = blu - (yClrMod % (range * 100));
-    fill(red,_grn,_blu);
+    var _grn = getCtrl("GRN").val + (yClrMod % (getCtrl("Range").val * 99)); 
+    var _blu = getCtrl("BLU").val - (yClrMod % (getCtrl("Range").val * 100));
+    fill(getCtrl("RED").val,_grn,_blu);
 
     //make amt of steps increase as y increases
-    steps = map(y1,windowHeight / 10,windowHeight * 10 / 3,size_b,size_a);
+    steps = map(y1,windowHeight / 10,windowHeight * 10 / 3,getCtrl("SIZE_B").val,getCtrl("SIZE_A").val);
 
 
     for (let a = 0; a <= steps; a++) {
@@ -205,7 +110,7 @@ function draw() {
       if(DYNAMIC_IMAGE){
         //modulates t based on time which makes each point flow from start to end
         var speed = DEFAULT_SPEED + MIN_SPEED;
-        speed /= acceleration * FLOW_DIR;
+        speed /= getCtrl("Acceleration").val * FLOW_DIR;
         t += (millis() % speed) / (speed * steps );
       } 
 
@@ -214,7 +119,7 @@ function draw() {
       let mirrorX = bezierPoint(mirror1, mirror2, mirror3, mirror4, t);
       let y = bezierPoint(y1, y2, y3, y4, t);
 
-      let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,radius * 3,radius * 7);
+      let circleSize = map(y4,windowHeight * 3 / 4,windowHeight,getCtrl("Radius").val * 3,getCtrl("Radius").val * 7);
 
       if(t < 0.8){
         noStroke();
@@ -226,11 +131,7 @@ function draw() {
       circle(x, y, circleSize);
       circle(mirrorX,y, circleSize);
   }}
-
-
 }
-
-
 
 // a custom 'sleep' or wait' function, that returns a Promise that resolves only after a timeout
 function sleep(millisecondsDuration)
@@ -244,6 +145,5 @@ function sleep(millisecondsDuration)
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  center();
   background(0);
 }
